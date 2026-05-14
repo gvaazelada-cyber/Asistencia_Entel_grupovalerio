@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asistencia Pro - Grupo Valerio - Entel</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f2f5;--white:#fff;--border:#e5e7eb;--border2:#d1d5db;
+  --text:#111827;--sub:#6b7280;--muted:#9ca3af;
+  --accent:#2563eb;--al:#eff6ff;--ad:#1d4ed8;
+  --green:#059669;--gl:#ecfdf5;
+  --amber:#d97706;--aml:#fffbeb;
+  --red:#dc2626;--rl:#fef2f2;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --shm:0 4px 20px rgba(0,0,0,.08);
+  --shl:0 20px 60px rgba(0,0,0,.15);
+  --r:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── LOGIN ── */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e3a5f 0%,#1e40af 50%,#3b82f6 100%);position:relative;overflow:hidden}
+.login-card{background:#fff;border-radius:22px;padding:40px;width:100%;max-width:400px;position:relative;z-index:1;box-shadow:0 28px 80px rgba(0,0,0,.3);animation:slideUp .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.l-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.l-ic{width:42px;height:42px;background:var(--accent);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.l-brand{font-size:19px;font-weight:800;letter-spacing:-.4px}
+.l-brand span{color:var(--accent)}
+.l-title{font-size:24px;font-weight:800;margin-bottom:5px;letter-spacing:-.5px}
+.l-sub{font-size:13.5px;color:var(--sub);margin-bottom:24px}
+.fld{margin-bottom:14px}
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.fld input{width:100%;padding:12px 15px;border:1.5px solid var(--border2);border-radius:10px;font-family:inherit;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;background:#fafafa}
+.btn-login{width:100%;padding:13px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:6px}
+
+/* ── APP ── */
+#app{display:none;min-height:100vh}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:240px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100}
+.sb-brand{padding:22px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sb-ic{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.sb-nm{font-size:14px;font-weight:800;letter-spacing:-.4px}
+.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--sub);cursor:pointer;transition:all .15s;margin-bottom:1px;border:none;background:none;width:100%;text-align:left}
+.ni.active{background:var(--al);color:var(--accent);font-weight:700}
+.sb-user{padding:12px 14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.uav{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px}
+.main{margin-left:240px;flex:1}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.cw-t{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;color:var(--accent)}
+
+/* ── MARCAR ── */
+.card{background:#fff;border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);padding:22px;margin-bottom:18px}
+.banner{background:linear-gradient(135deg,var(--accent) 0%,#1d4ed8 100%);border-radius:var(--r);padding:22px;margin-bottom:20px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.sh-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.sho{padding:9px 5px;border:1.5px solid var(--border);border-radius:10px;background:#fff;text-align:center;cursor:pointer;transition:all .18s;font-size:11.5px;font-weight:600}
+.sho.sel{border-color:var(--accent);background:var(--al);color:var(--accent)}
+.ma{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ab{padding:16px 10px;border-radius:12px;border:1.5px solid transparent;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px}
+.ab-e{background:var(--gl);color:var(--green)}
+.ab-s{background:var(--rl);color:var(--red)}
+.ab-a{background:var(--aml);color:var(--amber)}
+.ab-f{background:var(--al);color:var(--accent)}
+
+/* ── LOADING ── */
+.loading{position:fixed;inset:0;background:rgba(255,255,255,.7);backdrop-filter:blur(2px);z-index:8888;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.loading.show{display:flex}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px 16px;box-shadow:0 12px 40px rgba(0,0,0,.15);display:flex;align-items:center;gap:10px;max-width:300px;font-size:13.5px;font-weight:500;transform:translateY(18px) scale(.95);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+#toast.show{transform:translateY(0) scale(1);opacity:1}
+</style>
+</head>
+<body>
+
+<div class="loading" id="loading"><div class="spinner"></div><p id="loading-msg">Procesando...</p></div>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="l-logo"><div class="l-ic">📋</div><div class="l-brand">Grupo<span>Valerio</span></div></div>
+    <div class="l-title">Grupo Valerio - Entel</div>
+    <div class="l-sub">Ingresa para registrar tu asistencia GPS</div>
+    <div class="fld"><label>Correo</label><input type="email" id="li-em" placeholder="usuario@grupovalerio.com"></div>
+    <div class="fld"><label>Contraseña</label><input type="password" id="li-pw" placeholder="••••••••"></div>
+    <button class="btn-login" onclick="doLogin()">Ingresar →</button>
+    <div id="l-err" style="color:var(--red);font-size:12px;margin-top:10px;display:none">Credenciales inválidas</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="layout">
+    <nav class="sidebar">
+      <div class="sb-brand"><div class="sb-ic">📋</div><div class="sb-nm">Grupo Valerio - Entel</div></div>
+      <div class="sb-nav"><button class="ni active">📍 Marcación</button></div>
+      <div class="sb-user">
+        <div class="uav" id="s-av">?</div>
+        <div style="flex:1;min-width:0"><div id="s-nm" style="font-weight:600;font-size:13px">—</div><div style="font-size:11px;color:var(--sub)">Asesor Entel</div></div>
+        <button onclick="location.reload()" style="background:none;border:none;cursor:pointer">↩</button>
+      </div>
+    </nav>
+    <div class="main">
+      <div class="topbar">
+        <div><h1 style="font-size:17px">Registro de Tienda</h1><p style="font-size:11px;color:var(--sub)">Validación por Geofencing</p></div>
+        <div class="cw-t" id="clock">00:00:00</div>
+      </div>
+      <div class="content">
+        <div class="banner">
+          <div><div id="bn-n" style="font-weight:800;font-size:18px">—</div><div id="bn-e" style="font-size:12px;opacity:.8">—</div></div>
+          <div style="text-align:right"><div style="font-size:10px;text-transform:uppercase">Estado</div><div id="bn-s" style="font-weight:700">Esperando...</div></div>
+        </div>
+        <div class="st">Selecciona tu turno</div>
+        <div class="sh-row">
+          <button class="sho" onclick="pickShift(this,'Mañana')">Mañana</button>
+          <button class="sho" onclick="pickShift(this,'Tarde')">Tarde</button>
+          <button class="sho" onclick="pickShift(this,'Noche')">Noche</button>
+          <button class="sho" onclick="pickShift(this,'Full Day')">Full Day</button>
+        </div>
+        <div class="ma">
+          <button class="ab ab-e" onclick="doMark('Entrada')">▶ Entrada</button>
+          <button class="ab ab-s" onclick="doMark('Salida')">⏹ Salida</button>
+          <button class="ab ab-a" onclick="doMark('Almuerzo')">☕ Almuerzo</button>
+          <button class="ab ab-f" onclick="doMark('Regreso')">↩ Regreso</button>
+        </div>
+        <div class="card" id="mini-log" style="margin-top:20px;font-size:13px;color:var(--sub)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><span id="t-msg"></span></div>
+
+<script>
+/**
+ * ══════════════════════════════════════════════════════════════
+ * CONFIGURACIÓN TIENDAS GRUPO VALERIO - JAMES
+ * ══════════════════════════════════════════════════════════════
+ */
+const API_URL = 'TU_URL_DE_APPS_SCRIPT_AQUI'; 
+
+const TIENDAS_ENTEL = [
+  { id: "GV-TEHUAMANTANGA", lat: -11.8335, lng: -77.0351 },
+  { id: "GV-TECARABAYLLO", lat: -11.8954, lng: -77.0371 },
+  { id: "GV-TECOLLIQUE", lat: -11.9288, lng: -77.0354 },
+  { id: "GV-TELOSPINOS", lat: -11.9614, lng: -77.0654 },
+  { id: "GV-TEJRDELAUNION", lat: -12.0468, lng: -77.0315 },
+  { id: "GV-TEATE", lat: -12.0234, lng: -76.9245 },
+  { id: "GV-TEHUAYCAN", lat: -12.0165, lng: -76.8322 },
+  { id: "GV-TEATECA", lat: -12.0521, lng: -76.9554 },
+  { id: "GV-TELURIN", lat: -12.2634, lng: -76.8715 }
+];
+
+const RADIO_MAX_METROS = 100; 
+
+let me = null, myShift = '';
+
+function tick(){ document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }
+setInterval(tick, 1000);
+
+async function doLogin(){
+  const em = document.getElementById('li-em').value;
+  const pw = document.getElementById('li-pw').value;
+  if(!em || !pw) return;
+  showLoad('Verificando asesor...');
+  try {
+    const r = await fetch(`${API_URL}?action=login&email=${em}&pass=${pw}`).then(res => res.json());
+    if(r.ok) {
+      me = r.user;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      document.getElementById('s-nm').textContent = me.nombre;
+      document.getElementById('bn-n').textContent = me.nombre;
+      document.getElementById('bn-e').textContent = me.email;
+      document.getElementById('s-av').textContent = me.nombre.substring(0,2).toUpperCase();
+    } else { document.getElementById('l-err').style.display = 'block'; }
+  } catch(e) { toast('Error de conexión'); }
+  hideLoad();
+}
+
+function pickShift(el, s){
+  document.querySelectorAll('.sho').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel'); myShift = s;
+}
+
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+  const R = 6371e3;
+  const p1 = lat1 * Math.PI/180, p2 = lat2 * Math.PI/180;
+  const dp = (lat2-lat1) * Math.PI/180, dl = (lon2-lon1) * Math.PI/180;
+  const a = Math.sin(dp/2)**2 + Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+async function doMark(tipo){
+  if(!myShift) return toast('⚠️ Selecciona tu turno primero');
+  showLoad('Validando GPS...');
+  
+  if (!navigator.geolocation) return toast('❌ El dispositivo no soporta GPS');
+
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const userLat = pos.coords.latitude;
+    const userLng = pos.coords.longitude;
+
+    let tiendaActiva = TIENDAS_ENTEL.find(t => calcularDistancia(userLat, userLng, t.lat, t.lng) <= RADIO_MAX_METROS);
+
+    if(!tiendaActiva) {
+      hideLoad();
+      return toast('📍 No estás en una tienda autorizada de Grupo Valerio');
+    }
+
+    showLoad(`Registrando en ${tiendaActiva.id}...`);
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'markRecord', email: me.email, asesor: me.nombre,
+          tipo, turno: myShift, tienda: tiendaActiva.id,
+          fecha: new Date().toLocaleDateString('es-PE'),
+          hora: new Date().toLocaleTimeString('es-PE')
+        })
+      }).then(r => r.json());
+
+      if(res.ok) {
+        toast(`✅ ${tipo} registrada con éxito`);
+        document.getElementById('bn-s').textContent = '✅ Marcado';
+      }
+    } catch(e) { toast('❌ Error al guardar el registro'); }
+    hideLoad();
+  }, () => { hideLoad(); toast('❌ Activa el GPS para marcar'); }, {enableHighAccuracy:true});
+}
+
+function showLoad(m){ document.getElementById('loading').classList.add('show'); document.getElementById('loading-msg').textContent=m; }
+function hideLoad(){ document.getElementById('loading').classList.remove('show'); }
+function toast(m){ 
+  const t = document.getElementById('toast'); document.getElementById('t-msg').textContent = m;
+  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
