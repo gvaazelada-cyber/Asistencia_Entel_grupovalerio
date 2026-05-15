@@ -10,193 +10,303 @@
   --bg:#f8fafc;--white:#fff;--border:#e2e8f0;
   --text:#0f172a;--sub:#64748b;
   --accent:#2563eb;--green:#10b981;--amber:#f59e0b;--red:#ef4444;
-  --sh:0 4px 6px -1px rgba(0,0,0,0.1);
+  --sh:0 4px 6px -1px rgba(0,0,0,0.1);--r:20px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:40px}
 
-/* UI MEJORADA */
-.header{background:var(--accent);color:#fff;padding:25px 20px;border-radius:0 0 24px 24px;box-shadow:var(--sh)}
-.status-card{background:#fff;margin:-30px 20px 20px;padding:20px;border-radius:18px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:10px}
-.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;text-transform:uppercase}
-.badge-active{background:#ecfdf5;color:var(--green)}
-.badge-pause{background:#fffbeb;color:var(--amber)}
+/* UI HEADER */
+.header{background:var(--accent);color:#fff;padding:30px 20px;border-radius:0 0 24px 24px;box-shadow:var(--sh)}
+.nav-tabs{display:flex;background:#fff;padding:8px;margin:20px;border-radius:15px;gap:5px;box-shadow:var(--sh)}
+.tab{flex:1;padding:12px;border:none;background:none;font-size:11px;font-weight:800;color:var(--sub);border-radius:10px;cursor:pointer;transition:0.2s}
+.tab.active{background:#eff6ff;color:var(--accent)}
 
-/* CALENDARIO */
-.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:15px}
-.day-box{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;background:#f1f5f9;color:var(--sub)}
-.day-ontime{background:var(--green);color:#fff}
-.day-late{background:var(--amber);color:#fff}
+/* CARDS */
+.card{background:#fff;margin:0 20px 15px;padding:22px;border-radius:var(--r);box-shadow:var(--sh)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.stat-box{text-align:center;padding:12px;border-radius:12px;background:#f1f5f9}
+.stat-val{display:block;font-size:18px;font-weight:800}
+.stat-lbl{font-size:9px;color:var(--sub);text-transform:uppercase;font-weight:700}
 
-/* CONTROLES */
-.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:20px}
-.main-btn{border:none;padding:20px;border-radius:16px;font-weight:800;color:#fff;cursor:pointer;transition:transform 0.2s}
-.main-btn:active{transform:scale(0.95)}
-.timer-text{font-family:'JetBrains Mono';font-size:24px;font-weight:700;color:var(--accent);text-align:center}
+/* FORMULARIO SEMANAL */
+.day-row{display:flex;align-items:center;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin-bottom:8px}
+.day-name{font-weight:700;font-size:13px;width:80px}
+.input-group{display:flex;gap:8px;align-items:center}
+.h-input{padding:8px;border-radius:8px;border:1px solid var(--border);font-family:inherit;font-size:13px}
+.check-descanso{width:18px;height:18px;accent-color:var(--accent)}
 
-#login-screen{position:fixed;inset:0;background:var(--accent);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
+/* BOTONES */
+.btn-main{width:100%;padding:16px;border:none;border-radius:15px;font-weight:800;color:#fff;cursor:pointer;margin-bottom:10px;transition:0.2s}
+.btn-main:active{transform:scale(0.98)}
+
+#login-screen{position:fixed;inset:0;background:var(--accent);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.ranking-item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f1f5f9}
 </style>
 </head>
 <body>
 
+<div id="loading" style="display:none;position:fixed;inset:0;background:rgba(255,255,255,0.8);z-index:10000;flex-direction:column;align-items:center;justify-content:center">
+    <div style="border:4px solid #f3f3f3;border-top:4px solid var(--accent);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite"></div>
+    <p style="margin-top:10px;font-weight:600">Procesando...</p>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
 <div id="login-screen">
-  <div style="background:#fff;padding:30px;border-radius:24px;width:100%;max-width:360px">
-    <h2 style="margin-bottom:8px">Grupo Valerio</h2>
-    <p style="color:var(--sub);font-size:14px;margin-bottom:20px">Acceso Asesores Entel</p>
-    <input type="email" id="li-em" placeholder="Correo" style="width:100%;padding:12px;margin-bottom:10px;border:1px solid var(--border);border-radius:10px">
-    <input type="password" id="li-pw" placeholder="Contraseña" style="width:100%;padding:12px;margin-bottom:20px;border:1px solid var(--border);border-radius:10px">
-    <button onclick="doLogin()" style="width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-weight:700">Entrar →</button>
+  <div style="background:#fff;padding:35px;border-radius:28px;width:100%;max-width:380px;box-shadow:0 20px 50px rgba(0,0,0,0.2)">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <div style="background:var(--accent);padding:8px;border-radius:10px;color:#fff">📋</div>
+        <h2 style="letter-spacing:-1px">Grupo Valerio</h2>
+    </div>
+    <input type="email" id="li-em" placeholder="Correo corporativo" style="width:100%;padding:14px;margin-bottom:12px;border:1.5px solid var(--border);border-radius:12px;outline:none">
+    <input type="password" id="li-pw" placeholder="Contraseña" style="width:100%;padding:14px;margin-bottom:20px;border:1.5px solid var(--border);border-radius:12px;outline:none">
+    <button onclick="doLogin()" style="width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer">Ingresar al Sistema</button>
   </div>
 </div>
 
 <div id="app" style="display:none">
   <div class="header">
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <div>
-        <p style="opacity:0.8;font-size:12px">Bienvenido</p>
-        <h2 id="user-nm">James</h2>
-      </div>
-      <div id="clock" style="font-family:'JetBrains Mono';font-weight:700">00:00:00</div>
+      <div><p style="font-size:11px;opacity:0.8;font-weight:600">ASESOR ENTEL</p><h2 id="user-nm">—</h2></div>
+      <div id="clock" style="font-family:'JetBrains Mono';font-weight:800;font-size:20px">00:00</div>
     </div>
   </div>
 
-  <div class="status-card">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <span id="state-badge" class="badge badge-pause">Fuera de Turno</span>
-      <span id="store-nm" style="font-size:11px;font-weight:700;color:var(--accent)">Buscando tienda...</span>
+  <div class="nav-tabs">
+    <button class="tab active" onclick="showView('marcar', this)">📍 MARCAR</button>
+    <button class="tab" onclick="showView('horario', this)">📅 SEMANA</button>
+    <button class="tab" id="tab-admin" style="display:none" onclick="showView('admin', this)">📊 ADMIN</button>
+  </div>
+
+  <div id="view-marcar" class="view">
+    <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+            <span id="store-nm" style="font-size:13px;font-weight:800;color:var(--accent)">BUSCANDO TIENDA...</span>
+            <div id="state-dot" style="width:10px;height:10px;border-radius:50%;background:var(--sub)"></div>
+        </div>
+        <div id="timer-refri" style="display:none;text-align:center;margin-top:20px;border-top:1px solid #f1f5f9;padding-top:15px">
+            <p style="font-size:10px;color:var(--sub);font-weight:800">REFRIGERIO EN CURSO</p>
+            <h1 id="timer-val" style="font-family:'JetBrains Mono';color:var(--amber);font-size:32px">00:00</h1>
+        </div>
     </div>
-    <div id="timer-container" style="display:none">
-      <p style="font-size:11px;text-align:center;color:var(--sub)">TIEMPO EN REFRIGERIO</p>
-      <div class="timer-text" id="refri-timer">00:00</div>
+    <div style="padding:0 20px">
+        <button class="btn-main" style="background:var(--green)" onclick="handleMark('Entrada')">REGISTRAR ENTRADA</button>
+        <button class="btn-main" style="background:var(--amber)" onclick="handleMark('Almuerzo')">INICIAR REFRIGERIO</button>
+        <button class="btn-main" style="background:var(--accent)" onclick="handleMark('Regreso')">FIN REFRIGERIO</button>
+        <button class="btn-main" style="background:var(--red)" onclick="handleMark('Salida')">REGISTRAR SALIDA</button>
     </div>
   </div>
 
-  <div style="padding:0 20px">
-    <h3>Mi Asistencia</h3>
-    <div class="calendar-grid" id="calendar"></div>
+  <div id="view-horario" class="view" style="display:none">
+    <div class="card">
+        <h3>Planificación Semanal</h3>
+        <p style="font-size:12px;color:var(--sub);margin-bottom:20px">Define tu horario para la semana (Lunes a Domingo).</p>
+        
+        <div style="margin-bottom:20px">
+          <label style="font-size:10px;font-weight:800;color:var(--accent);display:block;margin-bottom:5px">SEMANA QUE INICIA EL LUNES:</label>
+          <input type="date" id="week-start" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--border);outline:none">
+        </div>
+
+        <div id="days-config"></div>
+
+        <button class="btn-main" style="background:var(--accent);margin-top:15px" onclick="saveWeeklySchedule()">Guardar Horario Semanal</button>
+    </div>
   </div>
 
-  <div class="btn-grid">
-    <button class="main-btn" style="background:var(--green)" onclick="handleMark('Entrada')">ENTRADA</button>
-    <button class="main-btn" style="background:var(--red)" onclick="handleMark('Salida')">SALIDA</button>
-    <button class="main-btn" style="background:var(--amber)" onclick="handleMark('Almuerzo')">ALMUERZO</button>
-    <button class="main-btn" style="background:var(--accent)" onclick="handleMark('Regreso')">REGRESO</button>
+  <div id="view-admin" class="view" style="display:none">
+    <div class="card">
+        <div class="stat-grid">
+            <div class="stat-box"><span class="stat-val" id="adm-active" style="color:var(--green)">0</span><span class="stat-lbl">En Turno</span></div>
+            <div class="stat-box"><span class="stat-val" id="adm-pause" style="color:var(--amber)">0</span><span class="stat-lbl">Refri</span></div>
+            <div class="stat-box"><span class="stat-val" id="adm-out" style="color:var(--sub)">0</span><span class="stat-lbl">Fuera</span></div>
+        </div>
+    </div>
+    <div class="card">
+        <h3 style="margin-bottom:15px">Ranking de Puntualidad</h3>
+        <div id="ranking-list"></div>
+    </div>
   </div>
 </div>
 
-<script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbwIWbklu_gTm6yO60fRGRwYzjDexurw_aRVer4ly_fjngCkddXYoXAVe81TU9Lv9aI/exec';
+<div id="toast" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 25px;border-radius:12px;font-size:13px;display:none;z-index:10001"></div>
 
+<script>
+/**
+ * ══════════════════════════════════════════════════════════════
+ * CONFIGURACIÓN GRUPO VALERIO - ENTEL
+ * ══════════════════════════════════════════════════════════════
+ */
+const API_URL = 'https://script.google.com/macros/s/AKfycbwIWbklu_gTm6yO60fRGRwYzjDexurw_aRVer4ly_fjngCkddXYoXAVe81TU9Lv9aI/exec';
 const TIENDAS = [
-  { id: "GV-TEHUAMANTANGA", lat: -11.8335, lng: -77.0351, abre: "09:00" },
-  { id: "GV-TECARABAYLLO", lat: -11.8954, lng: -77.0371, abre: "09:00" },
-  { id: "GV-TECOLLIQUE", lat: -11.9288, lng: -77.0354, abre: "08:30" },
-  { id: "GV-TELOSPINOS", lat: -11.9614, lng: -77.0654, abre: "09:00" },
-  { id: "GV-TEJRDELAUNION", lat: -12.0468, lng: -77.0315, abre: "10:00" },
-  { id: "GV-TEATE", lat: -12.0234, lng: -76.9245, abre: "09:00" },
-  { id: "GV-TEHUAYCAN", lat: -12.0165, lng: -76.8322, abre: "08:30" },
-  { id: "GV-TEATECA", lat: -12.0521, lng: -76.9554, abre: "09:00" },
-  { id: "GV-TELURIN", lat: -12.2634, lng: -76.8715, abre: "09:00" }
+  { id: "GV-TEHUAMANTANGA", lat: -11.8335, lng: -77.0351 },
+  { id: "GV-TECARABAYLLO", lat: -11.8954, lng: -77.0371 },
+  { id: "GV-TECOLLIQUE", lat: -11.9288, lng: -77.0354 },
+  { id: "GV-TELOSPINOS", lat: -11.9614, lng: -77.0654 },
+  { id: "GV-TEJRDELAUNION", lat: -12.0468, lng: -77.0315 },
+  { id: "GV-TEATE", lat: -12.0234, lng: -76.9245 },
+  { id: "GV-TEHUAYCAN", lat: -12.0165, lng: -76.8322 },
+  { id: "GV-TEATECA", lat: -12.0521, lng: -76.9554 },
+  { id: "GV-TELURIN", lat: -12.2634, lng: -76.8715 }
 ];
 
-let me = null, activeStore = null, timerInt = null;
+let me = null, currentStore = null, timerInt = null;
 
-// LÓGICA DE TIEMPO
+// RELOJ Y GEOCERCA
 setInterval(() => {
-  document.getElementById('clock').textContent = new Date().toLocaleTimeString();
-  detectStore();
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString('es-PE', {hour12:false, hour:'2-digit', minute:'2-digit'});
+    updateGeo();
 }, 1000);
 
-async function detectStore() {
-  navigator.geolocation.getCurrentPosition(p => {
-    const found = TIENDAS.find(t => {
-      const d = Math.hypot(p.coords.latitude - t.lat, p.coords.longitude - t.lng) * 111320;
-      return d <= 300; // Radio de 300m para James
-    });
-    if(found) {
-      activeStore = found;
-      document.getElementById('store-nm').textContent = "📍 " + found.id;
-    } else {
-      document.getElementById('store-nm').textContent = "⚠️ Fuera de Rango";
-    }
-  });
+function updateGeo() {
+    navigator.geolocation.getCurrentPosition(p => {
+        const found = TIENDAS.find(t => {
+            const dist = Math.hypot(p.coords.latitude - t.lat, p.coords.longitude - t.lng) * 111320;
+            return dist <= 300; // Radio ampliado para interiores
+        });
+        currentStore = found;
+        document.getElementById('store-nm').textContent = found ? found.id : "FUERA DE RANGO";
+        document.getElementById('state-dot').style.background = found ? 'var(--green)' : 'var(--red)';
+    }, null, {enableHighAccuracy: true});
 }
 
+// INICIO DE SESIÓN
 async function doLogin() {
-  const em = document.getElementById('li-em').value, pw = document.getElementById('li-pw').value;
-  const r = await fetch(`${API_URL}?action=login&email=${em}&pass=${pw}`).then(res => res.json());
-  if(r.ok) {
-    me = r.user;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    document.getElementById('user-nm').textContent = me.nombre;
-    renderCalendar();
-  }
+    const em = document.getElementById('li-em').value, pw = document.getElementById('li-pw').value;
+    if(!em || !pw) return;
+    toggleLoading(true);
+    try {
+        const r = await fetch(`${API_URL}?action=login&email=${em}&pass=${pw}`).then(res => res.json());
+        if(r.ok) {
+            me = r.user;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            document.getElementById('user-nm').textContent = me.nombre;
+            if(me.rol === 'Admin') document.getElementById('tab-admin').style.display = 'block';
+            initScheduleInputs();
+        } else { alert("Credenciales incorrectas"); }
+    } catch(e) { alert("Error de conexión"); }
+    toggleLoading(false);
 }
 
-function handleMark(tipo) {
-  if(!activeStore) return alert("Debes estar en una tienda autorizada.");
-  
-  const ahora = new Date();
-  const [hAbre, mAbre] = activeStore.abre.split(':').map(Number);
-  const limite = new Date(); limite.setHours(hAbre, mAbre + 10, 0); // 10 min tolerancia
-
-  if(tipo === 'Entrada') {
-    const puntual = ahora <= limite;
-    updateStatus('En Turno', puntual ? 'green' : 'amber');
-  }
-
-  if(tipo === 'Almuerzo') startTimer();
-  if(tipo === 'Regreso') stopTimer();
-
-  saveToSheets(tipo);
+// GESTIÓN DE VISTAS
+function showView(view, btn) {
+    document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('view-' + view).style.display = 'block';
+    btn.classList.add('active');
+    if(view === 'admin') loadAdminDashboard();
 }
 
-function startTimer() {
-  document.getElementById('timer-container').style.display = 'block';
-  updateStatus('En Refrigerio', 'amber');
-  let sec = 0;
-  timerInt = setInterval(() => {
-    sec++;
-    const m = String(Math.floor(sec/60)).padStart(2,'0');
-    const s = String(sec%60).padStart(2,'0');
-    document.getElementById('refri-timer').textContent = `${m}:${s}`;
-    if(sec > 3600) document.getElementById('refri-timer').style.color = 'red'; // Alerta tras 1 hora
-  }, 1000);
+// GENERAR INPUTS DE DÍAS
+function initScheduleInputs() {
+    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    const container = document.getElementById('days-config');
+    container.innerHTML = days.map(dia => `
+        <div class="day-row">
+            <span class="day-name">${dia}</span>
+            <div class="input-group">
+                <input type="time" class="h-input" id="h-${dia}">
+                <label style="font-size:9px;color:var(--sub);display:flex;align-items:center;gap:4px">
+                    <input type="checkbox" class="check-descanso" onchange="toggleDescanso('${dia}', this)"> Descanso
+                </label>
+            </div>
+        </div>
+    `).join('');
 }
 
-function stopTimer() {
-  clearInterval(timerInt);
-  document.getElementById('timer-container').style.display = 'none';
-  updateStatus('En Turno', 'green');
+function toggleDescanso(dia, el) {
+    const input = document.getElementById(`h-${dia}`);
+    if(el.checked) {
+        input.value = "";
+        input.disabled = true;
+        input.style.opacity = "0.3";
+    } else {
+        input.disabled = false;
+        input.style.opacity = "1";
+    }
 }
 
-function updateStatus(txt, color) {
-  const b = document.getElementById('state-badge');
-  b.textContent = txt;
-  b.className = `badge badge-${color === 'green' ? 'active' : 'pause'}`;
+async function saveWeeklySchedule() {
+    const weekStart = document.getElementById('week-start').value;
+    if(!weekStart) return alert("Selecciona la fecha del lunes");
+
+    const horarios = {};
+    ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'].forEach(dia => {
+        const input = document.getElementById(`h-${dia}`);
+        horarios[dia] = input.disabled ? "DESCANSO" : (input.value || "DESCANSO");
+    });
+
+    toggleLoading(true);
+    const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'setWeeklySchedule', email: me.email, weekStart, horarios })
+    }).then(r => r.json());
+    
+    toggleLoading(false);
+    if(res.ok) alert("Planificación de la semana guardada correctamente");
 }
 
-function renderCalendar() {
-  const c = document.getElementById('calendar');
-  for(let i=1; i<=31; i++) {
-    const d = document.createElement('div');
-    d.className = 'day-box';
-    d.textContent = i;
-    // Aquí se conectaría la lógica real de colores según el Sheets
-    c.appendChild(d);
-  }
+// REGISTRO DE MARCACIÓN
+async function handleMark(tipo) {
+    if(!currentStore) return alert("Debes estar en una tienda de Grupo Valerio para marcar.");
+    
+    if(tipo === 'Almuerzo') startRefri();
+    if(tipo === 'Regreso') stopRefri();
+
+    toggleLoading(true);
+    const now = new Date();
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                action: 'markRecord', email: me.email, asesor: me.nombre,
+                tipo, tienda: currentStore.id, hora: now.toLocaleTimeString('es-PE'),
+                fecha: now.toLocaleDateString('es-PE')
+            })
+        }).then(r => r.json());
+        if(res.ok) showToast(`${tipo} registrado con éxito`);
+    } catch(e) { alert("Error al guardar registro"); }
+    toggleLoading(false);
 }
 
-async function saveToSheets(tipo) {
-  await fetch(API_URL, {
-    method: 'POST',
-    body: JSON.stringify({
-      action: 'markRecord', email: me.email, asesor: me.nombre,
-      tipo, tienda: activeStore.id, fecha: new Date().toLocaleDateString(),
-      hora: new Date().toLocaleTimeString()
-    })
-  });
+function startRefri() {
+    document.getElementById('timer-refri').style.display = 'block';
+    let sec = 0;
+    timerInt = setInterval(() => {
+        sec++;
+        const m = Math.floor(sec/60);
+        document.getElementById('timer-val').textContent = `${String(m).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
+        if(m >= 60) document.getElementById('timer-val').style.color = 'var(--red)'; // Alerta una hora
+    }, 1000);
+}
+
+function stopRefri() {
+    clearInterval(timerInt);
+    document.getElementById('timer-refri').style.display = 'none';
+}
+
+async function loadAdminDashboard() {
+    const r = await fetch(`${API_URL}?action=getAdminStats`).then(res => res.json());
+    if(r.ok) {
+        document.getElementById('adm-active').textContent = r.stats.activo;
+        document.getElementById('adm-pause').textContent = r.stats.refri;
+        document.getElementById('adm-out').textContent = r.stats.fuera;
+        
+        document.getElementById('ranking-list').innerHTML = r.ranking.map(a => `
+            <div class="ranking-item">
+                <span style="font-size:13px;font-weight:600">${a.nombre}</span>
+                <span style="font-family:'JetBrains Mono';font-size:11px;color:${a.atraso > 10 ? 'var(--red)' : 'var(--green)'}">
+                    ${a.atraso > 0 ? '+'+a.atraso+'m' : 'PUNTUAL'}
+                </span>
+            </div>
+        `).join('');
+    }
+}
+
+function toggleLoading(s) { document.getElementById('loading').style.display = s ? 'flex' : 'none'; }
+function showToast(m) {
+    const t = document.getElementById('toast');
+    t.textContent = m; t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3000);
 }
 </script>
 </body>
